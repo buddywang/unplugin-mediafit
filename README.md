@@ -1,5 +1,9 @@
 # unplugin-mediafit
 
+- 通过 fitkit 自定义转换函数(自定义转换逻辑、将最终结果保存到 outputFilepath 中)
+- 转换函数可以串行组合应用
+- 对于每个转换函数，提供 ctx 对象，包含 sharp/ffmpeg（命令行执行工具）
+
 视频（ffmpeg）、图片改变尺寸/格式（只改尺寸/格式）
 
 只需下载最大尺寸的资源，通过插件自动重设尺寸并生成新文件，开发/生产环境自动更改路径
@@ -16,7 +20,14 @@
 
 # 功能
 
-通过添加 query, 自动对图片进行处理并按 query 生成新的图片文件
+通过添加 query, 自动对图片/视频进行处理并按 query 生成新的文件
+
+- 对于图片
+  - resize
+  - 格式转换
+- 对于视频
+  - resize
+  - 去音频
 
 ## 图片
 
@@ -144,12 +155,49 @@
 
 ## 视频
 
-1. 用 ffmpeg.wasm 0.12 之前的版本支持 nodejs，免安装
-2. 自己先安装 ffmpeg，确保 ffmpeg 命令全局可以，这时用 child_process 执行命令
+1. 用 ffmpeg.wasm 0.12 之前的版本支持 nodejs，免安装(要求 node 版本 16.x)
+2. 自己先安装 ffmpeg，确保 ffmpeg 命令全局可以，这时用 child_process 执行命令(要求先安装 ffmpeg)
+3. 自定义编译 ffmpeg，根据功能最小化编译，推荐：https://tongyi.aliyun.com/qianwen/share?shareId=e1f87c97-3aea-4d6e-81df-70b69ed8ed25
+   https://tongyi.aliyun.com/qianwen/share?shareId=07f0dc14-22a8-4124-bed7-8d7d51ed9533
 
-（输出视频分辨率不变时，可以加上参数`-c copy`复用原来的音视频流，不重新编码）
+- mac 上 ffmpeg 编译配置
 
-ffmpeg 默认会按`-preset medium` 重新编码，可以通过`-preset xxx` 进行显示控制
+```bash
+./configure \
+  --disable-everything \
+  --enable-small \
+  --enable-gpl \
+  --enable-nonfree \
+  --enable-libx264 \
+  --enable-encoder=libx264 \
+  --enable-decoder=h264 \
+  --enable-parser=h264 \
+  --enable-protocol=file \
+  --enable-filter=scale \
+  --enable-demuxer=mov,mp4 \
+  --enable-muxer=mp4 \
+  --enable-static
+```
+
+- ffmpeg 编译命令
+
+```bash
+make -j$(sysctl -n hw.ncpu)
+```
+
+- ffmpeg 安装到指定目录命令
+
+```bash
+make install DESTDIR=$(pwd)/install
+```
+
+- 清楚构建产物
+
+```bash
+make clean
+```
+
+> ffmpeg 默认会按`-preset medium` 重新编码，可以通过`-preset xxx` 进行显式控制
 
 - 只进行分辨率调整
   `ffmpeg -i xx.mp4 -vf scale=xx:-1 xx.mp4`
@@ -173,4 +221,4 @@ ffmpeg 默认会按`-preset medium` 重新编码，可以通过`-preset xxx` 进
   }
   ```
 
-## 提供预览效果页（大小差异、效果对比）
+## 图片提供预览效果页（大小差异、效果对比）
