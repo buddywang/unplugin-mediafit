@@ -32,7 +32,6 @@
 ## 图片
 
 参数缩写哲学：取每个单词的第一个字母，例如 quality-> q ; tileWidth-> tw; xres-> xr ; bitdepth-> bd
-只挑选
 
 - 转换尺寸 resize(opt)
 
