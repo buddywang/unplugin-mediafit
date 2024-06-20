@@ -1,21 +1,31 @@
 {
   "name": "unplugin-mediafit",
   "version": "0.0.1",
-  "description": "init",
-  "main": "index.js",
+  "description": "todo...",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup --publicDir"
   },
   "author": "wguohui2@gmail.com",
   "license": "MIT",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "*.d.ts",
     "dist",
     "README.md"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "type": "module",
   "devDependencies": {
     "@types/node": "^20.14.5",
     "tsup": "^8.1.0",

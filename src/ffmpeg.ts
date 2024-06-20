@@ -18,37 +18,44 @@ const getDefaultFFmpegPath = () => {
 };
 
 let ffmpegPath = getDefaultFFmpegPath();
-const run = (argsStr: string) => {
-  const commandStr = `${ffmpegPath} ${argsStr}`;
-  const [command, ...args] = commandStr.split(" ");
+const run = (argsStr: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const commandStr = `${ffmpegPath} ${argsStr}`;
+    const [command, ...args] = commandStr.split(" ");
 
-  logger.info(`start running '${commandStr}'`);
+    logger.info(`start running '${commandStr}'`);
 
-  // 使用spawn方法执行命令
-  const ffmpegProcess = spawn(command, args);
+    // 使用spawn方法执行命令
+    const ffmpegProcess = spawn(command, args);
 
-  // 监听stdout输出
-  ffmpegProcess.stdout.on("data", (data) => {
-    logger.info(`${data.toString()}`);
-  });
+    // 监听stdout输出
+    ffmpegProcess.stdout.on("data", (data) => {
+      logger.info(`${data.toString()}`);
+    });
 
-  // 监听stderr输出，这通常包含警告和错误信息
-  ffmpegProcess.stderr.on("data", (data) => {
-    logger.info(`${data.toString()}`);
-  });
+    // 监听stderr输出，这通常包含警告和错误信息
+    ffmpegProcess.stderr.on("data", (data) => {
+      logger.info(`${data.toString()}`);
+    });
 
-  // 监听进程关闭事件
-  ffmpegProcess.on("close", (code) => {
-    if (code === 0) {
-      logger.info("FFmpeg processing finished successfully.");
-    } else {
-      logger.error(`FFmpeg exited with code ${code}.`);
-    }
-  });
+    // 监听进程关闭事件
+    ffmpegProcess.on("close", (code) => {
+      if (code === 0) {
+        logger.info("FFmpeg processing finished successfully.");
+        // todo 生成后 通过hmr更新文件
+        resolve("success");
+      } else {
+        logger.error(`FFmpeg exited with code ${code}.`);
+        reject("fail");
+      }
+    });
 
-  // 可选：监听进程错误事件
-  ffmpegProcess.on("error", (err) => {
-    logger.error(`Error spawning FFmpeg: ${err}`);
+    // 可选：监听进程错误事件
+    ffmpegProcess.on("error", (err) => {
+      logger.error(`Error spawning FFmpeg: ${err}`);
+      // todo  删除生成文件
+      reject("fail");
+    });
   });
 };
 

@@ -1,11 +1,15 @@
 export const mediaFitTag = "@fit:";
 
+interface IFitFuncInfo {
+  fitFuncName: string;
+  params: { [key: string]: string };
+}
 /**
  * 对于输入形如 'xx/xx/aa@fit:rs(w=200&h=300&f=cover).png'的字符串，返回 [{fitFuncName: "rs", params: {w:'200',h:'300',f:'cover'}}]
  * @param id 包含 mediafit 调用格式字符串
  * @returns 解码后的信息数组
  */
-export const decodeParamStr = (id: string) => {
+export const decodeParamStr = (id: string): IFitFuncInfo[] => {
   const startIndex = id.indexOf(mediaFitTag) + mediaFitTag.length;
   const endIndex = id.lastIndexOf(".");
   const paramsStr = id.slice(startIndex, endIndex);
