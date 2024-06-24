@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HelloWorld from "./components/HelloWorld.vue";
 import pcVideo from "./assets/video/pc.mp4";
-import mobileVideo from "./assets/video/pc@fit:scale(w=300&h=200).mp4";
+import mobileVideo from "./assets/video/pc@fit:scale(w=750).mp4";
 </script>
 
 <template>

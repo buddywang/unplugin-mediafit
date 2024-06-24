@@ -13,7 +13,7 @@ import { FitFunc, IFitFuncParam } from "../index";
 // 3. 将处理结果写入 outputFilepath 中
 
 /**
- * 调整视频分辨率
+ * 调整视频分辨率，用法 scale(w=xx&h=xx)
  * @param data IFitFuncParam
  */
 const videoScaleFit: FitFunc = async (data: IFitFuncParam) => {
