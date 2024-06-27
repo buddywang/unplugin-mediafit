@@ -5,11 +5,6 @@ import { decodeParamStr, mediaFitTag } from "./utils";
 import fitFuncContext from "./context";
 import { builtInFitKit } from "./fitKit";
 
-// JPEG, PNG, WebP, GIF, AVIF, TIFF and SVG
-
-// await sharp("text_rgba.png")
-//   .trim({ background: "yellow", threshold: 42 })
-//   .toFile("text_rgba1.png");
 export interface IFitFuncParam {
   inputFilePath: string;
   params: { [key: string]: string };
@@ -59,26 +54,23 @@ export default function mediaFit(opt?: IOptions): PluginOption {
         // 1.1 提取参数
         const fitFuncInfoArr = decodeParamStr(id);
         // 1.2  目标文件地址、结果文件地址（这里取简单做法）
-        const inputFilePath = id.replace(/@fit:.*\./g, ".");
-        const outputFilePath = id;
+        let inputFilePath = id.replace(/@fit:.*\./g, ".");
+        // 那些需要转换格式的 fitfunc 会改变 outputFilePath
+        let outputFilePath = id;
 
         // todo 检查是否存在inputFile
 
-        // 验证是否已存在 outputFilePath ，有则跳过，没有继续
-        if (!existsSync(outputFilePath)) {
-          // 2. 匹配处理函数、依次运行转换函数，生成结果文件
-          for (let index = 0; index < fitFuncInfoArr.length; index++) {
-            const { fitFuncName, params } = fitFuncInfoArr[index];
-            // fitFunc 参数
-            // inputFilePath：需要被处理的文件路径
-            // params：解析用户输入后的参数对象
-            // ctx: { sharp; ffmpeg; info; error; warn }：上下文工具,
-            // outputFilePath：需要输出的文件路径
+        // 2. 匹配处理函数、依次运行转换函数，生成结果文件
+        for (let index = 0; index < fitFuncInfoArr.length; index++) {
+          const { fitFuncName, params } = fitFuncInfoArr[index];
+          // 碰到转换格式的，需要更新输出文件格式
+          if (params.f) {
+            const originFormat = inputFilePath.split(".").pop()!;
+            outputFilePath = outputFilePath.replace(originFormat, params.f);
+          }
 
-            // fitFunc 一般包含以下逻辑
-            // 1. 读取 inputFilePath 文件
-            // 2. 处理
-            // 3. 将处理结果写入 outputFilepath 中
+          // todo 验证是否已存在 outputFilePath ，有则跳过，没有继续
+          if (!existsSync(outputFilePath)) {
             const fitFunc = fitKit[fitFuncName];
             await fitFunc({
               inputFilePath,
@@ -87,9 +79,12 @@ export default function mediaFit(opt?: IOptions): PluginOption {
               params: params,
             });
           }
+
+          // todo 暂不支持串联调用 fitfunc，暂时只考虑支持一个fitfunc函数调用
+          inputFilePath = outputFilePath;
         }
-        // 已存在文件，跳过处理，直接返回
-        // 4. 组装结果文件导出返回 (也可以 生成文件后不需要返回了)
+        // 4. 组装结果文件导出返回
+        // todo 不建议串联调用 fitfunc，暂时只支持一个fitfunc函数
         let code = `export default "${outputFilePath.replace(root, "")}"`;
         return code;
       }

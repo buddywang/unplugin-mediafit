@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "todo...",
   "scripts": {
-    "build": "tsup --publicDir"
+    "build": "tsup --publicDir",
+    "vue-demo-dev": "pnpm -F vue-demo dev"
   },
   "author": "wguohui2@gmail.com",
   "license": "MIT",

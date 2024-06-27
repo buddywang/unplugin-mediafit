@@ -178,22 +178,10 @@
   --enable-static
 ```
 
-- ffmpeg 编译命令
+- ffmpeg 编译并安装到当前 install 目录下
 
 ```bash
-make -j$(sysctl -n hw.ncpu)
-```
-
-- ffmpeg 安装到指定目录命令
-
-```bash
-make install DESTDIR=$(pwd)/install
-```
-
-- 清楚构建产物
-
-```bash
-make clean
+make clean && make -j$(sysctl -n hw.ncpu) && make install DESTDIR=$(pwd)/install
 ```
 
 > ffmpeg 默认会按`-preset medium` 重新编码，可以通过`-preset xxx` 进行显式控制
