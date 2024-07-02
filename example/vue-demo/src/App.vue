@@ -9,7 +9,6 @@ import cardPng from "./assets/image/card.png";
 import cardWebp from "./assets/image/card@fit:imgtf(f=webp).png";
 import cardAvif from "./assets/image/card@fit:imgtf(f=avif).png";
 import cardJpeg from "./assets/image/card@fit:imgtf(f=jpeg).png";
-console.log(33444, cardAvif);
 </script>
 
 <template>

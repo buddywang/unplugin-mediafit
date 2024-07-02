@@ -1,7 +1,32 @@
 # unplugin-mediafit
 
+如名 mediafit，转换图片、视频等资源成自己想要的样子，易扩展，响应式页面开发利器
+
+## 名词
+
+- `fitFunc`：转换函数
+- `fitKit`：转换函数集，key 是使用 对应 fitFunc 转换函数的标识
+
+内置 3 个常用 fitFunc
+
+```js
+builtInFitKit = {
+  scale: videoScaleFit, // 基于ffmpeg, 调整视频分辨率，用法： @fit:scale(w=xx&h=xx)
+  rs: imageResizeFit, // 基于sharp, 调整图片尺寸，用法： @fit:rs(w=xx&h=xx&f=cover...)
+  imgtf: imgTransformFit, // 基于sharp, 转换图片格式、质量等等，用法：@fit:imgtf(f=png&q=80)
+};
+```
+
+## 使用示例
+
+用法如下：
+
+![image](https://raw.githubusercontent.com/buddywang/vite-plugin-dir2json/main/img/code2.png)
+
+---
+
 - 通过 fitkit 自定义转换函数(自定义转换逻辑、将最终结果保存到 outputFilepath 中)
-- 转换函数可以串行组合应用
+- 转换函数可以串行组合应用(暂不支持)
 - 对于每个转换函数，提供 ctx 对象，包含 sharp/ffmpeg（命令行执行工具）
 - 规定需要转换格式时，用 f 缩写
 
@@ -198,15 +223,3 @@ make clean && make -j$(sysctl -n hw.ncpu) && make install DESTDIR=$(pwd)/install
 
 - 去音频
   `ffmpeg -i xx.mp4 -an xx.mp4`
-
-- todo (提 pr)
-  ```js
-  {
-    :'',
-    :'',
-    :'',
-    :'',
-  }
-  ```
-
-## 图片提供预览效果页（大小差异、效果对比）
