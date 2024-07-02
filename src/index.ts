@@ -1,9 +1,11 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "path";
-import type { ResolvedConfig, PluginOption } from "vite";
+import type { PluginOption } from "vite";
 import { decodeParamStr, mediaFitTag } from "./utils";
 import fitFuncContext from "./context";
 import { builtInFitKit } from "./fitKit";
+import logger from "./logger";
+import context from "./context";
 
 export interface IFitFuncParam {
   inputFilePath: string;
@@ -17,20 +19,17 @@ export interface IOptions {
   ffmpegPath?: string;
 }
 
-export default function mediaFit(opt?: IOptions): PluginOption {
-  let root: string;
-  let mode: string;
+export function mediaFit(opt?: IOptions): PluginOption {
+  const root = path.resolve("");
+  const mode = process.env.NODE_ENV;
 
   const fitKit = Object.assign(builtInFitKit, opt?.fitKit || {});
+  // 初始化ffmpegPath
+  context.ffmpeg.setFFmpegPath(opt?.ffmpegPath || "");
 
   return {
     name: "mediaFit",
-    enforce: "pre",
-    configResolved(resolvedConfig: ResolvedConfig) {
-      root = resolvedConfig.root;
-      mode = resolvedConfig.mode;
-      console.log(333, mode);
-    },
+    enforce: "pre", // 在 vite 核心插件 vite:asset 前运行，避免路径被vite:asset插件处理了
     resolveId: {
       order: "post",
       handler(source, importer) {
@@ -46,6 +45,8 @@ export default function mediaFit(opt?: IOptions): PluginOption {
 
           return absolutePath;
         }
+
+        return null;
       },
     },
     async load(id: string) {
@@ -58,9 +59,16 @@ export default function mediaFit(opt?: IOptions): PluginOption {
         // 那些需要转换格式的 fitfunc 会改变 outputFilePath
         let outputFilePath = id;
 
-        // todo 检查是否存在inputFile
+        // 检查是否存在inputFile
+        if (!existsSync(inputFilePath)) {
+          logger.error(
+            `${inputFilePath.replace(root, "")}
+             not exist when processing ${outputFilePath.replace(root, "")}`
+          );
+        }
 
-        // 2. 匹配处理函数、依次运行转换函数，生成结果文件
+        // 2. 匹配处理函数、运行转换函数，生成结果文件
+        // 暂不支持串联调用 fitfunc，暂时只考虑支持一个fitfunc函数调用
         for (let index = 0; index < fitFuncInfoArr.length; index++) {
           const { fitFuncName, params } = fitFuncInfoArr[index];
           // 碰到转换格式的，需要更新输出文件格式
@@ -69,7 +77,7 @@ export default function mediaFit(opt?: IOptions): PluginOption {
             outputFilePath = outputFilePath.replace(originFormat, params.f);
           }
 
-          // todo 验证是否已存在 outputFilePath ，有则跳过，没有继续
+          // 验证是否已存在 outputFilePath ，有则跳过，没有继续
           if (!existsSync(outputFilePath)) {
             const fitFunc = fitKit[fitFuncName];
             await fitFunc({
@@ -80,15 +88,30 @@ export default function mediaFit(opt?: IOptions): PluginOption {
             });
           }
 
-          // todo 暂不支持串联调用 fitfunc，暂时只考虑支持一个fitfunc函数调用
           inputFilePath = outputFilePath;
         }
-        // 4. 组装结果文件导出返回
-        // todo 不建议串联调用 fitfunc，暂时只支持一个fitfunc函数
-        let code = `export default "${outputFilePath.replace(root, "")}"`;
-        return code;
+
+        // 3. 返回文件路径导出语句
+        if (mode == "development") {
+          let code = `export default "${outputFilePath.replace(root, "")}";`;
+          return code;
+        } else {
+          // 将生成的文件添加到构建产物中
+          const referenceId = this.emitFile({
+            type: "asset",
+            name: path.basename(outputFilePath),
+            needsCodeReference: true,
+            source: readFileSync(outputFilePath),
+          });
+
+          let code = `export default import.meta.ROLLUP_FILE_URL_${referenceId};`;
+          return code;
+        }
       }
+      return null;
     },
     transform() {},
   };
 }
+
+export default mediaFit;

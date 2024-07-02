@@ -1,10 +1,11 @@
 {
   "name": "unplugin-mediafit",
   "version": "0.0.1",
-  "description": "todo...",
+  "description": "如名mediafit，转换图片、视频等资源成自己想要的样子，易扩展，响应式页面开发利器",
   "scripts": {
     "build": "tsup --publicDir",
-    "vue-demo-dev": "pnpm -F vue-demo dev"
+    "dev": "npm run build && pnpm -F vue-demo dev",
+    "debug": "pnpm -F vue-demo debug"
   },
   "author": "wguohui2@gmail.com",
   "license": "MIT",

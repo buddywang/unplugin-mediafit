@@ -8,6 +8,7 @@ import {
   TiffOptions,
   WebpOptions,
 } from "sharp";
+import path from "path";
 
 const jpegParamMap: { [key: string]: keyof JpegOptions } = {
   q: "quality",
@@ -103,9 +104,11 @@ const checkIfSupport = (format: string) => {
   // @ts-ignore
   return !!formatOptsMap[format];
 };
+const root = path.resolve("");
 
 /**
- * 调整图片分辨率, 用法 itf(f=png&q=10)
+ * 转换图片，可转换格式，指定转换质量等等, 用法 imgtf(f=png&q=80)
+ * https://sharp.pixelplumbing.com/api-output#toformat
  * @param data IFitFuncParam
  */
 const imgTransformFit: FitFunc = async (data: IFitFuncParam) => {
@@ -115,28 +118,39 @@ const imgTransformFit: FitFunc = async (data: IFitFuncParam) => {
     if (checkIfSupport(originFormat)) {
       const transformOpts: any = {};
       // format默认自己的格式
-      let outputFormat: SupportFormat = originFormat as SupportFormat,
-        paramMap: ParamMap;
+      let outputFormat: SupportFormat = originFormat as SupportFormat;
+      let paramMap: ParamMap;
       Object.keys(params).forEach((key) => {
+        // 需要转换格式时，规定需要转换格式时，用 f 缩写
         if (key == "f") {
           outputFormat = params[key] as SupportFormat;
-          paramMap = formatOptsMap[outputFormat];
         }
       });
+      // 参数缩写map
+      paramMap = formatOptsMap[outputFormat];
+
+      // 解析参数
       Object.keys(params).forEach((key) => {
         if (key !== "f") {
           transformOpts[paramMap[key]] = params[key];
         }
       });
 
-      ctx.info(`start to generate ${outputFilePath}`);
+      ctx.info(`start to generate ${outputFilePath.replace(root, "")}`);
+
       await ctx
         .sharp(inputFilePath)
         .toFormat(outputFormat, transformOpts)
         .toFile(outputFilePath);
-      ctx.info(`success generate ${outputFilePath}`);
+
+      ctx.info(`success generate ${outputFilePath.replace(root, "")}`);
     } else {
-      ctx.error(`.${originFormat} not support`);
+      ctx.error(
+        `.${originFormat} not support when processing ${inputFilePath.replace(
+          root,
+          ""
+        )}`
+      );
     }
   } catch (error) {
     // 删除文件

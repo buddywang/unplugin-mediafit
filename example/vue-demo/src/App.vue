@@ -1,46 +1,30 @@
 <script setup lang="ts">
 import HelloWorld from "./components/HelloWorld.vue";
+// 响应式视频
 import pcVideo from "./assets/video/pc.mp4";
 import mobileVideo from "./assets/video/pc@fit:scale(w=750).mp4";
+// 响应式图片
+// 参考https://developer.mozilla.org/zh-CN/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images
 import cardPng from "./assets/image/card.png";
-// todo 图片不同分辨率、不同格式 demo
 import cardWebp from "./assets/image/card@fit:imgtf(f=webp).png";
-console.log(333, cardWebp);
+import cardAvif from "./assets/image/card@fit:imgtf(f=avif).png";
+import cardJpeg from "./assets/image/card@fit:imgtf(f=jpeg).png";
+console.log(33444, cardAvif);
 </script>
 
 <template>
-  <div class="video-container">
-    <!-- todo 用source 写响应式 demo -->
-    <video class="pc-video" autoplay muted :src="pcVideo"></video>
-    <video class="mobile-video" autoplay muted :src="mobileVideo"></video>
-  </div>
-  <!-- todo 响应式图片demo -->
-  <img class="image" :src="cardWebp" alt="" />
+  <!-- 当视口宽度小于600px时 用 mobileVideo， 否则用 pcVideo，不支持video时显示 video not support-->
+  <video controls autoplay muted>
+    <source :src="mobileVideo" media="(max-width: 600px)" />
+    <source :src="pcVideo" />
+    video not support
+  </video>
+  <!-- 响应式图片：按浏览器支持优先选择 avif > webp > jpeg > png -->
   <picture>
-    <source
-      srcset="landscape.png"
-      media="(min-width: 1000px)"
-      width="1000"
-      height="400"
-    />
-    <source
-      srcset="square.png"
-      media="(min-width: 800px)"
-      width="800"
-      height="800"
-    />
-    <source
-      srcset="portrait.png"
-      media="(min-width: 600px)"
-      width="600"
-      height="800"
-    />
-    <img
-      src="fallback.png"
-      alt="当浏览器不支持来源时使用的图片"
-      width="500"
-      height="400"
-    />
+    <source :srcset="cardAvif" type="image/avif" />
+    <source :srcset="cardWebp" type="image/webp" />
+    <source :srcset="cardJpeg" type="image/jpeg" />
+    <img class="img" :src="cardPng" alt="demo" />
   </picture>
   <HelloWorld msg="Vite + Vue" />
 </template>
@@ -58,19 +42,12 @@ console.log(333, cardWebp);
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
-.video-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+video {
+  width: 100%;
 }
-.pc-video {
-  width: 600px;
-}
-.mobile-video {
-  width: 400px;
-}
-.image {
-  width: 300px;
+.img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
 }
 </style>

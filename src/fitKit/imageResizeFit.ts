@@ -25,17 +25,19 @@ const paramMap: { [key: string]: keyof ResizeOptions } = {
 };
 
 /**
- * 调整图片分辨率, 用法 rs(w=xx&h=xx&f=cover...)
+ * 调整图片尺寸, 用法 rs(w=xx&h=xx&f=cover...)
  * @param data IFitFuncParam
  */
 const imageResizeFit: FitFunc = async (data: IFitFuncParam) => {
   const { inputFilePath, outputFilePath, ctx, params } = data;
   try {
+    // 1. 解析
     const resizeOpts: any = {};
     Object.keys(params).forEach((key) => {
       resizeOpts[paramMap[key]] = params[key];
     });
 
+    // 2. 调用sharp
     await ctx.sharp(inputFilePath).resize(resizeOpts).toFile(outputFilePath);
   } catch (error) {
     // 删除文件

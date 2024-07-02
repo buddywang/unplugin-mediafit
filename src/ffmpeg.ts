@@ -6,19 +6,25 @@ const getDefaultFFmpegPath = () => {
   const os = process.platform;
   if (os === "win32") {
     // todo: Generate ffmpeg exe file under window platform
-    logger.error("暂不支持linux平台");
+    logger.warn("暂不支持window平台");
   } else if (os === "darwin") {
-    console.log("当前运行在macOS系统上");
+    // logger.info("当前运行在macOS系统上");
     return path.join(__dirname, "./bin/ffmpeg");
   } else if (os === "linux") {
-    logger.error("暂不支持linux平台");
+    logger.warn("暂不支持linux平台");
   } else {
-    logger.error("暂不支持本平台");
+    logger.warn("暂不支持本平台");
   }
+  return "";
 };
 
-let ffmpegPath = getDefaultFFmpegPath();
+let ffmpegPath = "";
 const run = (argsStr: string): Promise<string> => {
+  // 验证是否有可用的ffmpeg
+  if (!ffmpegPath) {
+    logger.error("Missing ffmpegPath, see options.ffmpegPath");
+  }
+
   return new Promise((resolve, reject) => {
     const commandStr = `${ffmpegPath} ${argsStr}`;
     const [command, ...args] = commandStr.split(" ");
@@ -61,7 +67,7 @@ const run = (argsStr: string): Promise<string> => {
 
 export default Object.freeze({
   setFFmpegPath: (ffmpegpath: string) => {
-    ffmpegPath = ffmpegpath;
+    ffmpegPath = ffmpegpath || getDefaultFFmpegPath();
   },
   run: run,
 });

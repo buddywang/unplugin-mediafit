@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "debug": "vite --mode debug",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
@@ -14,8 +15,9 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
     "typescript": "^5.2.2",
+    "unplugin-mediafit": "workspace:*",
     "vite": "^5.2.0",
-    "vue-tsc": "^2.0.6",
-    "unplugin-mediafit": "workspace:*"
+    "vite-plugin-inspect": "^0.8.4",
+    "vue-tsc": "^2.0.6"
   }
 }
