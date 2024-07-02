@@ -21,7 +21,7 @@ builtInFitKit = {
 
 用法如下：
 
-![image](https://raw.githubusercontent.com/buddywang/vite-plugin-dir2json/main/img/code2.png)
+![image](https://raw.githubusercontent.com/buddywang/unplugin-mediafit/main/img/code1.png)
 
 ---
 
