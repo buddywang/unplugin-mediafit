@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import mediaFit from "unplugin-mediafit";
+import mediaFit from "unplugin-mediafit/vite";
 // @ts-ignore
-import mediaFitOrigin from "../../src/index";
+import mediaFitOrigin from "../../src/vite";
 import Inspect from "vite-plugin-inspect";
 
 // https://vitejs.dev/config/

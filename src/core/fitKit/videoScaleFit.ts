@@ -1,5 +1,5 @@
 import { rm } from "fs/promises";
-import { FitFunc, IFitFuncParam } from "../index";
+import { FitFunc, IFitFuncParam } from "../unplugin";
 
 // fitFunc 参数
 // inputFilePath：需要被处理的文件路径

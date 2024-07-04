@@ -1,5 +1,5 @@
 import { rm } from "fs/promises";
-import { FitFunc, IFitFuncParam } from "../index";
+import { FitFunc, IFitFuncParam } from "../unplugin";
 import { ResizeOptions } from "sharp";
 
 // fitFunc 参数

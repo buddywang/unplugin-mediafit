@@ -4,8 +4,8 @@
   "description": "如名mediafit，转换图片、视频等资源成自己想要的样子，易扩展，响应式页面开发利器",
   "scripts": {
     "build": "tsup --publicDir",
-    "dev": "npm run build && pnpm -F vue-demo dev",
-    "debug": "pnpm -F vue-demo debug"
+    "dev": "npm run build && pnpm -F vite-demo dev",
+    "debug": "pnpm -F vite-demo debug"
   },
   "author": "wguohui2@gmail.com",
   "license": "MIT",
@@ -19,9 +19,24 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./vite": {
+      "import": {
+        "types": "./dist/vite.d.ts",
+        "default": "./dist/vite.js"
+      },
+      "require": {
+        "types": "./dist/vite.d.cts",
+        "default": "./dist/vite.cjs"
+      }
     }
   },
   "publishConfig": {
@@ -38,6 +53,7 @@
   },
   "dependencies": {
     "picocolors": "^1.0.1",
-    "sharp": "^0.33.4"
+    "sharp": "^0.33.4",
+    "unplugin": "^1.11.0"
   }
 }

@@ -1,5 +1,5 @@
 import { rm } from "fs/promises";
-import { FitFunc, IFitFuncParam } from "../index";
+import { FitFunc, IFitFuncParam } from "../unplugin";
 import {
   AvifOptions,
   GifOptions,
@@ -10,6 +10,7 @@ import {
 } from "sharp";
 import path from "path";
 
+// todo 参数如何区分数字、字符串、boolean
 const jpegParamMap: { [key: string]: keyof JpegOptions } = {
   q: "quality",
   p: "progressive",
