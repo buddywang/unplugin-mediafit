@@ -1,6 +1,12 @@
 # unplugin-mediafit
 
-如名 mediafit，转换图片、视频等资源成自己想要的样子，易扩展，响应式页面开发利器
+如名 mediafit，转换图片、视频等资源成自己想要的样子，易扩展，响应式页面开发利器，内置 ffmpeg（处理视频）、sharp（处理图片）支持
+
+计划支持以下打包工具
+
+- [x] vite
+- [ ] webpack(欢迎 pr)
+- [ ] farm（欢迎 pr）
 
 ## 名词
 
@@ -18,6 +24,8 @@ builtInFitKit = {
 ```
 
 ## 使用示例
+
+在文件后缀名前面增加 query，格式 @fit:fitFuncKey(a=xx&b=xx)
 
 用法如下：
 

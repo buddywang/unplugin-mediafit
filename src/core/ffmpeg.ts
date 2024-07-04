@@ -67,7 +67,7 @@ const run = (argsStr: string): Promise<string> => {
 
 export default Object.freeze({
   setFFmpegPath: (ffmpegpath: string) => {
-    ffmpegPath = ffmpegpath || getDefaultFFmpegPath();
+    ffmpegPath = ffmpegpath;
   },
   run: run,
 });

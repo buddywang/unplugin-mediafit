@@ -13,7 +13,14 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [vue(), pluginFunc(), Inspect()],
+    plugins: [
+      vue(),
+      pluginFunc({
+        ffmpegPath: "/Users/wangguohui/Documents/workplace/demo/ffmpeg",
+        // ffmpegPath: "/your/path/to/ffmpeg", // todo
+      }),
+      Inspect(),
+    ],
     // build: { minify: false },
   };
 });

@@ -1,5 +1,5 @@
 import { rm } from "fs/promises";
-import { FitFunc, IFitFuncParam } from "../unplugin";
+import { FitFunc, IFitFuncParam } from "../type";
 import {
   AvifOptions,
   GifOptions,
@@ -8,7 +8,6 @@ import {
   TiffOptions,
   WebpOptions,
 } from "sharp";
-import path from "path";
 
 // todo 参数如何区分数字、字符串、boolean
 const jpegParamMap: { [key: string]: keyof JpegOptions } = {
@@ -105,7 +104,6 @@ const checkIfSupport = (format: string) => {
   // @ts-ignore
   return !!formatOptsMap[format];
 };
-const root = path.resolve("");
 
 /**
  * 转换图片，可转换格式，指定转换质量等等, 用法 imgtf(f=png&q=80)
@@ -137,18 +135,18 @@ const imgTransformFit: FitFunc = async (data: IFitFuncParam) => {
         }
       });
 
-      ctx.info(`start to generate ${outputFilePath.replace(root, "")}`);
+      ctx.info(`start to generate ${outputFilePath.replace(ctx.root, "")}`);
 
       await ctx
         .sharp(inputFilePath)
         .toFormat(outputFormat, transformOpts)
         .toFile(outputFilePath);
 
-      ctx.info(`success generate ${outputFilePath.replace(root, "")}`);
+      ctx.info(`success generate ${outputFilePath.replace(ctx.root, "")}`);
     } else {
       ctx.error(
         `.${originFormat} not support when processing ${inputFilePath.replace(
-          root,
+          ctx.root,
           ""
         )}`
       );

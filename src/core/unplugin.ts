@@ -1,39 +1,25 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "path";
-// import type { PluginOption } from "vite";
 import { decodeParamStr, mediaFitTag } from "./utils";
 import fitFuncContext from "./context";
 import { builtInFitKit } from "./fitKit";
 import logger from "./logger";
-import context from "./context";
 import { createUnplugin } from "unplugin";
-
-export interface IFitFuncParam {
-  inputFilePath: string;
-  params: { [key: string]: string };
-  ctx: typeof fitFuncContext;
-  outputFilePath: string;
-}
-export type FitFunc = (param: IFitFuncParam) => void;
-export interface IOptions {
-  fitKit?: { [key: string]: FitFunc };
-  ffmpegPath?: string;
-}
+import { IOptions } from "./type";
 
 // @ts-ignore
 export default createUnplugin<IOptions | undefined>((opt) => {
-  const root = path.resolve("");
-  const mode = process.env.NODE_ENV;
+  const { root, mode } = fitFuncContext;
 
   const fitKit = Object.assign(builtInFitKit, opt?.fitKit || {});
   // 初始化ffmpegPath
-  context.ffmpeg.setFFmpegPath(opt?.ffmpegPath || "");
+  fitFuncContext.ffmpeg.setFFmpegPath(opt?.ffmpegPath || "");
 
   return {
     name: "unplugin-mediaFit",
     enforce: "pre", // 在 vite 核心插件 vite:asset 前运行，避免路径被vite:asset插件处理了
     resolveId: {
-      order: "post",
+      // order: "post", // todo why
       handler(source: string, importer: string) {
         if (source.includes(mediaFitTag)) {
           // resolve
@@ -114,8 +100,3 @@ export default createUnplugin<IOptions | undefined>((opt) => {
     },
   };
 });
-
-// export function mediaFit(opt?: IOptions): PluginOption {
-// }
-
-// export default mediaFit;
