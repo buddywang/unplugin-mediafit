@@ -2,16 +2,7 @@ import { rm } from "fs/promises";
 import { FitFunc, IFitFuncParam } from "../type";
 import { ResizeOptions } from "sharp";
 
-// fitFunc 参数
-// inputFilePath：需要被处理的文件路径
-// params：解析用户输入后的参数对象
-// ctx: { sharp; ffmpeg; info; error; warn }：上下文工具,
-// outputFilePath：需要输出的文件路径
-
-// fitFunc 一般包含以下逻辑
-// 1. 读取 inputFilePath 文件
-// 2. 处理
-// 3. 将处理结果写入 outputFilepath 中
+// 参数缩写哲学：取每个单词的第一个字母，例如 quality-> q ; tileWidth-> tw; xres-> xr ; bitdepth-> bd
 const paramMap: { [key: string]: keyof ResizeOptions } = {
   w: "width",
   h: "height",

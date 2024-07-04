@@ -4,7 +4,7 @@ import { FitFunc, IFitFuncParam } from "../type";
 // fitFunc 参数
 // inputFilePath：需要被处理的文件路径
 // params：解析用户输入后的参数对象
-// ctx: { sharp; ffmpeg; info; error; warn }：上下文工具,
+// ctx: { sharp; ffmpeg; info; error; warn... }：上下文工具,
 // outputFilePath：需要输出的文件路径
 
 // fitFunc 一般包含以下逻辑

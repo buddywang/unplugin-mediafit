@@ -1,22 +1,22 @@
 import { spawn } from "child_process";
-import path from "path";
+// import path from "path";
 import logger from "./logger";
 
-const getDefaultFFmpegPath = () => {
-  const os = process.platform;
-  if (os === "win32") {
-    // todo: Generate ffmpeg exe file under window platform
-    logger.warn("暂不支持window平台");
-  } else if (os === "darwin") {
-    // logger.info("当前运行在macOS系统上");
-    return path.join(__dirname, "./bin/ffmpeg");
-  } else if (os === "linux") {
-    logger.warn("暂不支持linux平台");
-  } else {
-    logger.warn("暂不支持本平台");
-  }
-  return "";
-};
+// const getDefaultFFmpegPath = () => {
+//   const os = process.platform;
+//   if (os === "win32") {
+//     // todo: Generate ffmpeg exe file under window platform
+//     logger.warn("暂不支持window平台");
+//   } else if (os === "darwin") {
+//     // logger.info("当前运行在macOS系统上");
+//     return path.join(__dirname, "./bin/ffmpeg");
+//   } else if (os === "linux") {
+//     logger.warn("暂不支持linux平台");
+//   } else {
+//     logger.warn("暂不支持本平台");
+//   }
+//   return "";
+// };
 
 let ffmpegPath = "";
 const run = (argsStr: string): Promise<string> => {
@@ -65,9 +65,9 @@ const run = (argsStr: string): Promise<string> => {
   });
 };
 
+export const setFFmpegPath = (ffmpegpath: string) => {
+  ffmpegPath = ffmpegpath;
+};
 export default Object.freeze({
-  setFFmpegPath: (ffmpegpath: string) => {
-    ffmpegPath = ffmpegpath;
-  },
   run: run,
 });

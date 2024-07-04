@@ -29,7 +29,6 @@ export interface IFitFuncParam {
      * 简单封装了ffmpeg，可以像命令行一样调用ffmpeg
      */
     ffmpeg: Readonly<{
-      setFFmpegPath: (ffmpegpath: string) => void;
       run: (argsStr: string) => Promise<string>;
     }>;
     info: (str: string) => void;

@@ -10,6 +10,7 @@ import {
 } from "sharp";
 
 // todo 参数如何区分数字、字符串、boolean
+// 参数缩写哲学：取每个单词的第一个字母，例如 quality-> q ; tileWidth-> tw; xres-> xr ; bitdepth-> bd
 const jpegParamMap: { [key: string]: keyof JpegOptions } = {
   q: "quality",
   p: "progressive",

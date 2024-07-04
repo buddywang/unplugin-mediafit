@@ -6,6 +6,7 @@ import { builtInFitKit } from "./fitKit";
 import logger from "./logger";
 import { createUnplugin } from "unplugin";
 import { IOptions } from "./type";
+import { setFFmpegPath } from "./ffmpeg";
 
 // @ts-ignore
 export default createUnplugin<IOptions | undefined>((opt) => {
@@ -13,7 +14,7 @@ export default createUnplugin<IOptions | undefined>((opt) => {
 
   const fitKit = Object.assign(builtInFitKit, opt?.fitKit || {});
   // 初始化ffmpegPath
-  fitFuncContext.ffmpeg.setFFmpegPath(opt?.ffmpegPath || "");
+  setFFmpegPath(opt?.ffmpegPath || "");
 
   return {
     name: "unplugin-mediaFit",
@@ -68,12 +69,14 @@ export default createUnplugin<IOptions | undefined>((opt) => {
           // 验证是否已存在 outputFilePath ，有则跳过，没有继续
           if (!existsSync(outputFilePath)) {
             const fitFunc = fitKit[fitFuncName];
-            await fitFunc({
-              inputFilePath,
-              outputFilePath,
-              ctx: fitFuncContext,
-              params: params,
-            });
+            await Promise.resolve(
+              fitFunc({
+                inputFilePath,
+                outputFilePath,
+                ctx: fitFuncContext,
+                params: params,
+              })
+            );
           }
 
           inputFilePath = outputFilePath;

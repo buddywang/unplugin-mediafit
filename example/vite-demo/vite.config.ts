@@ -16,8 +16,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       pluginFunc({
-        ffmpegPath: "/Users/wangguohui/Documents/workplace/demo/ffmpeg",
-        // ffmpegPath: "/your/path/to/ffmpeg", // todo
+        ffmpegPath: "/your/path/to/ffmpeg", // todo replace to your ffmpeg path
       }),
       Inspect(),
     ],
