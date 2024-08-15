@@ -19,24 +19,21 @@ export default createUnplugin<IOptions | undefined>((opt) => {
   return {
     name: "unplugin-mediaFit",
     enforce: "pre", // 在 vite 核心插件 vite:asset 前运行，避免路径被vite:asset插件处理了
-    resolveId: {
-      // order: "post", // todo why
-      handler(source: string, importer: string) {
-        if (source.includes(mediaFitTag)) {
-          // resolve
-          let absolutePath;
-          // source will resolve by import-analysis plugin when config alias, if so, just use the result
-          if (source.includes(root)) {
-            absolutePath = source;
-          } else {
-            absolutePath = path.join(path.dirname(importer || ""), source);
-          }
-
-          return absolutePath;
+    resolveId(source: string, importer: string) {
+      if (source.includes(mediaFitTag)) {
+        // resolve
+        let absolutePath;
+        // source will resolve by import-analysis plugin when config alias, if so, just use the result
+        if (source.includes(root)) {
+          absolutePath = source;
+        } else {
+          absolutePath = path.join(path.dirname(importer || ""), source);
         }
 
-        return null;
-      },
+        return absolutePath;
+      }
+
+      return null;
     },
     async load(id: string) {
       if (id.includes(mediaFitTag)) {

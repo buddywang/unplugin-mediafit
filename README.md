@@ -47,7 +47,12 @@ import xx from "xxx@fit:fitFuncKey(a=xx&b=xx).xx"
 ### 安装
 
 ```bash
-npm i unplugin-mediafit
+# using npm
+npm install -D unplugin-mediafit
+# using pnpm
+pnpm install -D unplugin-mediafit
+# using yarn
+yarn add --dev unplugin-mediafit
 ```
 
 #### 支持 vite and rollup.
@@ -85,6 +90,8 @@ interface IOptions {
    */
   ffmpegPath?: string;
 }
+
+type FitFunc = (param: IFitFuncParam) => void;
 
 interface IFitFuncParam {
   /**
@@ -126,8 +133,6 @@ interface IFitFuncParam {
    */
   outputFilePath: string;
 }
-
-type FitFunc = (param: IFitFuncParam) => void;
 ```
 
 内置的 fitKit 包含 3 个常用 fitFunc，对应参数详情请看[这里](./src/core/fitKit/)

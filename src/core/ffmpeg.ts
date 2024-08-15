@@ -2,22 +2,6 @@ import { spawn } from "child_process";
 // import path from "path";
 import logger from "./logger";
 
-// const getDefaultFFmpegPath = () => {
-//   const os = process.platform;
-//   if (os === "win32") {
-//     // todo: Generate ffmpeg exe file under window platform
-//     logger.warn("暂不支持window平台");
-//   } else if (os === "darwin") {
-//     // logger.info("当前运行在macOS系统上");
-//     return path.join(__dirname, "./bin/ffmpeg");
-//   } else if (os === "linux") {
-//     logger.warn("暂不支持linux平台");
-//   } else {
-//     logger.warn("暂不支持本平台");
-//   }
-//   return "";
-// };
-
 let ffmpegPath = "";
 const run = (argsStr: string): Promise<string> => {
   // 验证是否有可用的ffmpeg
@@ -51,16 +35,15 @@ const run = (argsStr: string): Promise<string> => {
         // todo 生成后 通过hmr更新文件
         resolve("success");
       } else {
-        logger.error(`FFmpeg exited with code ${code}.`);
         reject("fail");
+        logger.error(`FFmpeg exited with code ${code}.`);
       }
     });
 
     // 可选：监听进程错误事件
     ffmpegProcess.on("error", (err) => {
-      logger.error(`Error spawning FFmpeg: ${err}`);
-      // todo  删除生成文件
       reject("fail");
+      logger.error(`Error spawning FFmpeg: ${err}`);
     });
   });
 };
